@@ -3,6 +3,8 @@ import {useForm} from "react-hook-form";
 import {BiError} from "react-icons/bi";
 
 import {MdArrowRightAlt} from "react-icons/md";
+import axios from "axios";
+
 export default function OrderForm({closeModal}) {
     // const [wallet, setWallet] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -14,22 +16,37 @@ export default function OrderForm({closeModal}) {
     const {
         register,
         handleSubmit,
-        watch,
         formState: {errors},
+        getValues
     } = useForm();
 
-    const onSubmit = (data) => {
-        alert(JSON.stringify(data));
+    const onSubmit = async (data) => {
+        const resp = await axios.post('https://nnfc-merch-default-rtdb.firebaseio.com/order', ({
+            'address': data.address,
+            'country': data.country,
+            'firstName': data.firstName,
+            'lastName': data.lastName,
+            'town': data.town,
+            'wallet': data.wallet,
+            'zipCode': data.zipCode
+        }), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            console.log("Status: ", response.status);
+            console.log("Data: ", response.data);
+        }).catch(error => {
+            console.error('Something went wrong!', error);
+        })
+
         closeModal();
-        // Disclosure.close(true);
     }; // your form submit function which will invoke after successful validation
 
-    console.log(watch("example")); // you can watch individual input by pass the name of the input
 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-
                 {/* WALLET */}
                 <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Wallet
@@ -49,7 +66,7 @@ export default function OrderForm({closeModal}) {
                     </p>
                 )}
 
-                    {/* FIRST NAME */}
+                {/* FIRST NAME */}
                 <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
                     First Name
                 </label>
@@ -68,7 +85,7 @@ export default function OrderForm({closeModal}) {
                     </p>
                 )}
 
-                    {/* LAST NAME */}
+                {/* LAST NAME */}
                 <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Last Name
                 </label>
@@ -87,7 +104,7 @@ export default function OrderForm({closeModal}) {
                     </p>
                 )}
 
-                    {/* COUNTRY */}
+                {/* COUNTRY */}
                 <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Country
                 </label>
@@ -106,7 +123,7 @@ export default function OrderForm({closeModal}) {
                     </p>
                 )}
 
-                    {/* TOWN */}
+                {/* TOWN */}
                 <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Town
                 </label>
@@ -125,14 +142,13 @@ export default function OrderForm({closeModal}) {
                     </p>
                 )}
 
-                    {/* ADDRESS */}
+                {/* ADDRESS */}
                 <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Address
                 </label>
                 <input
                     {...register("setAddress", {
                         required: true,
-                        pattern: /^[a-zA-Z0-9_.-]*$/i,
                     })}
                     onInput={(e) => setAddress(e.target.value)}
                     className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -144,7 +160,7 @@ export default function OrderForm({closeModal}) {
                     </p>
                 )}
 
-                    {/* ZIP CODE */}
+                {/* ZIP CODE */}
                 <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Zipcode
                 </label>
@@ -166,10 +182,14 @@ export default function OrderForm({closeModal}) {
                 <button
                     type="submit"
                     className="absolute right-8 bottom-6 flex-row justify-center px-4 py-2 text-sm font-medium text-white bg-green-500 border border-transparent rounded-md hover:bg-green-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-500"
-                    // onClick={close}
+                    // onClick={() => {
+                    //     setFirstName("firstName")
+                    //     setLastName("lastName")
+                    //     setCountry("country")
+                    // }}
                 >
-                   <p className="flex"> Order                    
-                    <MdArrowRightAlt className="w-4 h-4 mt-1 ml-1"/>
+                    <p className="flex"> Order
+                        <MdArrowRightAlt className="w-4 h-4 mt-1 ml-1"/>
                     </p>
                 </button>
             </form>
