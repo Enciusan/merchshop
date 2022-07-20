@@ -19,7 +19,11 @@ type WindowWithSolana = Window & {
     solana?: PhantomProvider;
 }
 
-const Wallet: FC = () => {
+interface CallBackTest {
+    func: (key: string) => void;
+}
+
+const Wallet: FC<CallBackTest> = (props) => {
 
     const [ walletAvail, setWalletAvail ] = useState(false);
     const [ provider, setProvider ] = useState<PhantomProvider | null>(null);
@@ -41,10 +45,11 @@ const Wallet: FC = () => {
 
     useEffect( () => {
         provider?.on("connect", (publicKey: PublicKey)=>{ 
-            console.log(`connect event: ${publicKey}`);
+            // console.log(`connect event: ${publicKey}`);
             setConnected(true); 
             // <OrderForm closeModal={null} wallet={publicKey}/>
             setPubKey(publicKey);
+            props.func(`${publicKey}`);
         });
         provider?.on("disconnect", ()=>{ 
             console.log("disconnect event");

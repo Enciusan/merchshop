@@ -8,7 +8,13 @@ import Particle from "./Particle";
 const Marketplace = (props) => {
     const [produse, setProduse] = useState([]);
     const [filter, setFilter] = useState("");
+    const [PK, setPK] = useState();
 
+    const callBackFuncPK = (publicKey) => {
+        setPK(publicKey);
+    }
+
+    // console.log(PK);
 
     // Axios method pentru get date card
     async function fetchData() {
@@ -59,7 +65,7 @@ const Marketplace = (props) => {
                         className="w-24 lg:hidden rounded-xl object-cover lg:h-24 lg:w-24"
                         src="../img/negru.png"
                     />
-                    <Wallet/>
+                    <Wallet func={callBackFuncPK}/>
                 </header>
 
                 <hr className="my-2 border-slate-200"/>
@@ -83,7 +89,7 @@ const Marketplace = (props) => {
                                 // <>
                                 //     {filter == (cards.name).toLowerCase() &&
                                 <Card
-                                    wallet={index}
+                                    wallet={PK}
                                     key={index}
                                     name={cards.name}
                                     price={cards.price}

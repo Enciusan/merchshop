@@ -1,12 +1,12 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {BiError} from "react-icons/bi";
 
 import {MdArrowRightAlt} from "react-icons/md";
 import axios from "axios";
 
-export default function OrderForm({closeModal}) {
-    // const [wallet, setWallet] = useState("");
+export default function OrderForm(props) {
+    const [wallet, setWallet] = useState();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [country, setCountry] = useState("");
@@ -19,6 +19,13 @@ export default function OrderForm({closeModal}) {
         formState: {errors},
         getValues
     } = useForm();
+
+    const defWallet = () => {
+        setWallet(props.wallet);
+    }
+    useEffect(() =>{
+        defWallet();
+    }, [])
 
     const onSubmit = async (data) => {
         const resp = await axios.post('https://nnfc-merch-default-rtdb.firebaseio.com/order', ({
@@ -39,8 +46,8 @@ export default function OrderForm({closeModal}) {
         }).catch(error => {
             console.error('Something went wrong!', error);
         })
-
-        closeModal();
+        alert('Crearea de comenzi nu este disponibila pe varianta demo');
+        props.closeModal();
     }; // your form submit function which will invoke after successful validation
 
 
@@ -48,14 +55,14 @@ export default function OrderForm({closeModal}) {
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {/* WALLET */}
-                <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
+                <label className="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Wallet
                 </label>
                 <input
+                    defaultValue={wallet}
                     {...register("wallet", {
                         required: true,
-                        maxLength: 20,
-                        pattern: /^[a-zA-Z0-9_.-]*$/i,
+                        maxLength: 50,
                     })}
                     className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 />
@@ -67,7 +74,7 @@ export default function OrderForm({closeModal}) {
                 )}
 
                 {/* FIRST NAME */}
-                <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
+                <label className="block text-gray-700 text-sm font-bold py-3 pl-3">
                     First Name
                 </label>
                 <input
@@ -86,7 +93,7 @@ export default function OrderForm({closeModal}) {
                 )}
 
                 {/* LAST NAME */}
-                <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
+                <label className="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Last Name
                 </label>
                 <input
@@ -105,7 +112,7 @@ export default function OrderForm({closeModal}) {
                 )}
 
                 {/* COUNTRY */}
-                <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
+                <label className="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Country
                 </label>
                 <input
@@ -124,7 +131,7 @@ export default function OrderForm({closeModal}) {
                 )}
 
                 {/* TOWN */}
-                <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
+                <label className="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Town
                 </label>
                 <input
@@ -143,7 +150,7 @@ export default function OrderForm({closeModal}) {
                 )}
 
                 {/* ADDRESS */}
-                <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
+                <label className="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Address
                 </label>
                 <input
@@ -161,7 +168,7 @@ export default function OrderForm({closeModal}) {
                 )}
 
                 {/* ZIP CODE */}
-                <label class="block text-gray-700 text-sm font-bold py-3 pl-3">
+                <label className="block text-gray-700 text-sm font-bold py-3 pl-3">
                     Zipcode
                 </label>
                 <input
